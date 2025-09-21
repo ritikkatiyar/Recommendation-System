@@ -8,20 +8,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class UserValidationService {
-
-    private final WebClient.Builder webClientBuilder;
+    private final WebClient userServiceWebClient;
 
     public boolean validateUser(String userId) {
         log.info("Calling User Validation API for userId: {}", userId);
-
-        try {
-            return webClientBuilder
-                    .baseUrl("http://USER-SERVICE") // must match Eureka
-                    .build()
-                    .get()
+        try{
+            return userServiceWebClient.get()
                     .uri("/api/users/{userId}/validate", userId)
                     .retrieve()
                     .bodyToMono(Boolean.class)
